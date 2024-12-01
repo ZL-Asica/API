@@ -1,0 +1,8 @@
+node_modules/*
+.yarn/*
+.wrangler/*
+.pnp.*
+package-lock.json
+yarn.lock
+LICENSE
+pnpm-lock.yaml
