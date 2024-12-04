@@ -5,4 +5,9 @@ export default [
   {
     ignores: ['prettier.config.cjs'],
   },
+  {
+    rules: {
+      'unicorn/prefer-string-replace-all': 'off',
+    },
+  },
 ]

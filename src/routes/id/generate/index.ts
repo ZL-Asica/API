@@ -1,24 +1,22 @@
 import type { Context } from 'hono'
 import { createRoute } from '@hono/zod-openapi'
 
-import {
-  generateIdSchema,
-  generateIdResponseSchema,
-} from './generate-id.schema'
+import { generateSchema, generateResponseSchema } from './schema'
 
 import { generateHash } from '@/utils'
+import type { ZodError } from '@/types'
 import { errorResponse, jsonContent, jsonContentRequired } from '@/lib/helper'
 
-const generateIdRoute = createRoute({
-  tags: ['tools'],
+const generateRoute = createRoute({
+  tags: ['id'],
   method: 'post',
-  path: '/generate-id',
+  path: '/generate',
   request: {
-    body: jsonContentRequired(generateIdSchema, 'inputValues'),
+    body: jsonContentRequired(generateSchema, 'inputValues'),
   },
   responses: {
     200: jsonContent(
-      generateIdResponseSchema,
+      generateResponseSchema,
       'Successfully generated unique ID with timestamp'
     ),
     400: errorResponse('Invalid JSON body'),
@@ -26,12 +24,12 @@ const generateIdRoute = createRoute({
   },
 })
 
-const generateId = async (c: Context) => {
+const generate = async (c: Context) => {
   try {
     const requestBody = await c.req.json()
 
     // Validate and parse request body
-    const request = await generateIdSchema.parseAsync(requestBody).catch(() => {
+    const request = await generateSchema.parseAsync(requestBody).catch(() => {
       throw new Error('Invalid JSON body')
     })
 
@@ -48,7 +46,12 @@ const generateId = async (c: Context) => {
     // Return success response
     return c.json({ id: hash.slice(0, length || 6), timestamp }, 200)
   } catch (error) {
-    console.error('Error during ID generation:', error)
+    if (error instanceof Error && error.name === 'ZodError') {
+      return c.json(
+        { error: 'Invalid input data', details: (error as ZodError).errors },
+        400
+      )
+    }
 
     // Handle JSON parse error
     if (error instanceof Error && error.message.includes('JSON')) {
@@ -63,4 +66,4 @@ const generateId = async (c: Context) => {
   }
 }
 
-export { generateIdRoute, generateId }
+export { generateRoute, generate }

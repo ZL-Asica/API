@@ -4,7 +4,8 @@ import { poweredBy } from 'hono/powered-by'
 import { OpenAPIHono } from '@hono/zod-openapi'
 import { apiReference } from '@scalar/hono-api-reference'
 
-import tools from '@/routes/tools'
+import id from '@/routes/id'
+import security from '@/routes/security'
 import { notFound, onError } from '@/middlewares'
 
 const app = new OpenAPIHono()
@@ -27,14 +28,15 @@ app.get('/favicon.ico', (c: Context) => {
   return c.redirect('https://www.zla.app/favicon.ico')
 })
 
-app.route('/tools', tools)
+app.route('/id', id)
+app.route('/security', security)
 
 // Set OpenAPI documentation
 app.doc31('/doc', {
   openapi: '3.1.0',
   info: {
     title: 'ZLA API',
-    version: '1.0.0',
+    version: '0.0.2',
   },
 })
 
