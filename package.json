@@ -16,24 +16,28 @@
   },
   "dependencies": {
     "@hono/zod-openapi": "^0.18.3",
-    "@scalar/hono-api-reference": "^0.5.162",
+    "@scalar/hono-api-reference": "^0.5.163",
+    "franc-min": "^6.2.0",
     "hono": "^4.6.12",
+    "pinyin-pro": "^3.26.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@cloudflare/vitest-pool-workers": "^0.5.32",
-    "@cloudflare/workers-types": "^4.20241112.0",
+    "@cloudflare/vitest-pool-workers": "^0.5.33",
+    "@cloudflare/workers-types": "^4.20241202.0",
     "@zl-asica/prettier-config": "^1.0.9",
     "eslint": "^9.16.0",
-    "eslint-config-zl-asica": "^1.0.19",
+    "eslint-config-zl-asica": "^1.0.20",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
-    "prettier": "^3.4.1",
+    "prettier": "^3.4.2",
     "vitest": "2.0.5",
-    "wrangler": "^3.88.0"
+    "wrangler": "^3.92.0"
   },
-  "overrides": {
-    "vitest": "2.0.5"
+  "pnpm": {
+    "overrides": {
+      "vitest": "2.0.5"
+    }
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [

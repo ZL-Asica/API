@@ -1,4 +1,5 @@
 import type { Context } from 'hono'
+import { cors } from 'hono/cors'
 import { secureHeaders } from 'hono/secure-headers'
 import { poweredBy } from 'hono/powered-by'
 import { OpenAPIHono } from '@hono/zod-openapi'
@@ -6,10 +7,12 @@ import { apiReference } from '@scalar/hono-api-reference'
 
 import id from '@/routes/id'
 import security from '@/routes/security'
+import text from '@/routes/text'
 import { notFound, onError } from '@/middlewares'
 
 const app = new OpenAPIHono()
 
+app.use(cors())
 app.use(poweredBy({ serverName: 'ZL Asica with Hono' }))
 app.use(
   secureHeaders({
@@ -30,12 +33,13 @@ app.get('/favicon.ico', (c: Context) => {
 
 app.route('/id', id)
 app.route('/security', security)
+app.route('/text', text)
 
 // Set OpenAPI documentation
 app.doc31('/doc', {
   openapi: '3.1.0',
   info: {
-    title: 'ZLA API',
+    title: "ZL Asica's API Reference",
     version: '0.0.2',
   },
 })

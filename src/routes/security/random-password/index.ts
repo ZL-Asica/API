@@ -23,15 +23,41 @@ const randomPasswordRoute = createRoute({
   },
 })
 
+const formatPasswordWithSeparator = (
+  password: string,
+  segmentLength: number = 6,
+  separator: string = '-'
+): string => {
+  const segments: string[] = []
+  const passwordChars = [...password]
+  let currentSegment = ''
+
+  for (let index = 0; index < passwordChars.length; index++) {
+    currentSegment += passwordChars[index]
+
+    if (
+      (index + 1) % segmentLength === 0 ||
+      index === passwordChars.length - 1
+    ) {
+      segments.push(currentSegment)
+      currentSegment = ''
+    }
+  }
+
+  return segments.join(separator)
+}
+
 const generateReadablePassword = async (
   length: number,
-  type: 'alphanumeric' | 'numeric' | 'alphanumeric-special'
+  type: 'alphanumeric' | 'numeric' | 'alphanumeric-special',
+  segmentLength: number = 6,
+  separator: string = '-'
 ): Promise<string> => {
   const charSets = {
     alphanumeric: 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789',
     numeric: '23456789',
     'alphanumeric-special':
-      'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%^&*()_+=[]{}|;:,.<>?',
+      'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%&*()_+=[]{}.<>?',
   }
 
   const charSet = charSets[type]
@@ -45,25 +71,7 @@ const generateReadablePassword = async (
     password += charSet[randomIndex]
   }
 
-  const passwordChars = [...password]
-  let currentSegment = ''
-  const segments = []
-
-  for (let index = 0; index < passwordChars.length; index++) {
-    currentSegment += passwordChars[index]
-    if (
-      currentSegment.length >= Math.floor(Math.random() * 3 + 4) &&
-      index !== passwordChars.length - 1
-    ) {
-      segments.push(currentSegment)
-      currentSegment = ''
-    }
-  }
-  segments.push(currentSegment)
-
-  const passwordWithSeparators = segments.join('-')
-
-  return passwordWithSeparators
+  return formatPasswordWithSeparator(password, segmentLength, separator)
 }
 
 const randomPassword = async (c: Context) => {

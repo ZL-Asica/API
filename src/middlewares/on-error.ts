@@ -15,21 +15,14 @@ export const onError: ErrorHandler = (
     )
   }
 
-  if (
-    c.res.body &&
-    c.res.body instanceof String &&
-    c.res.body.includes('JSON')
-  ) {
-    return c.json({ error: error.message }, 400)
-  }
-
   if (error instanceof HTTPException || error instanceof Error) {
     return c.json(
       {
         error: error.message,
       },
-      500
+      418 // I'm a teapot
     )
   }
+
   return c.json({ error: 'Internal Server Error' }, 500)
 }
